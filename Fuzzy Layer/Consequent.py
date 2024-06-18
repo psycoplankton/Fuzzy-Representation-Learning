@@ -1,3 +1,7 @@
+from FUZZY import FuzzyLayer
+import numpy as np
+import hparams
+
 class Consequent(FuzzyLayer):
     """
     This class generates the the crisp embeddings using the membership that were generated using the ANtecedant class.
@@ -14,24 +18,24 @@ class Consequent(FuzzyLayer):
         return np.mean(membership_array, axis = 2) #shape = (50, 5242)
 
     def get_embed_axis_mean(self):
-        a = X.transpose() #shape = (50, 5242)
+        a = self.X.transpose() #shape = (50, 5242)
         return np.mean(a, axis = 1) #shape = (50,)
 
     def get_embed_axis_variance(self):
         a = self.X.transpose()
         mean = self.get_embed_axis_mean()
-        variance = np.zeros(shape = node_embed_dim)
-        for i in range(node_embed_dim):
+        variance = np.zeros(shape = hparams.node_embed_dim)
+        for i in range(hparams.node_embed_dim):
             x = np.sqrt(np.mean((a[i] - mean[i])**2))
             variance[i] += x
         return variance #shape = (50,)
 
     def get_crisp_embeddings(self, average_membership_array): #average_membership_array.shape = (50, 5242)
-        a = X.transpose()
+        a = self.X.transpose()
         mean = self.get_embed_axis_mean()
         variance = self.get_embed_axis_variance()
-        new_X = np.zeros(shape = (node_embed_dim, self.X.shape[0]))
-        for i in range(node_embed_dim):
+        new_X = np.zeros(shape = (hparams.node_embed_dim, self.X.shape[0]))
+        for i in range(hparams.node_embed_dim):
             for j in range(self.X.shape[0]):
                 if average_membership_array[i][j] == 0:
                     new_X[i][j] = a[i][j]

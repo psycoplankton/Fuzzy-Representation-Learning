@@ -1,4 +1,6 @@
-
+from FUZZY import FuzzyLayer
+import numpy as np
+import hparams
 class Antecedant(FuzzyLayer):
     """
     Antecedant part of the fuzzy logic system, it gives us membership functions the node embeddings.
@@ -8,9 +10,9 @@ class Antecedant(FuzzyLayer):
 
 
     def dot_product(self):                                          #claculates the dot product of the embeddings and the centroids
-        dot_products = np.zeros(size = (self.X.shape[0], k))
+        dot_products = np.zeros(size = (self.X.shape[0], hparams.k))
         row =0
-        for node_embed in X:
+        for node_embed in self.X:
             for i in range(self.centroid_array.shape[0]):
                 y = np.matmul(node_embed, self.centroid_array[i])
             dot_products[row][i] += y
@@ -45,8 +47,8 @@ class Antecedant(FuzzyLayer):
         return variance
 
     def get_variance_tensor(self, embed_axis):
-        variance_tensor = np.zeros(shape = k)
-        for i in range(k):
+        variance_tensor = np.zeros(shape = hparams.k)
+        for i in range(hparams.k):
             variance = self.get_variance(cluster_num = i,
                                          embed_axis = embed_axis)
             variance_tensor[i] += variance
@@ -64,14 +66,16 @@ class Antecedant(FuzzyLayer):
         return np.exp(-gaussian)
 
     def get_membership_array(self, embed_axis):
-        membership_array = np.zeros(shape = (node_embed_dim, self.X.shape[0], k)) #(50, 5242, 5)
+        membership_array = np.zeros(shape = (hparams.nnode_embed_dim, self.X.shape[0], hparams.k)) #(50, 5242, 5)
         for node_embed_num in range(self.X.shape[0]):
-            for i in range(k):
+            for i in range(hparams.k):
                 membership = self.gaussianMF(cluster_num = i,
                                              embed_axis = embed_axis,
-                                             element = X[node_embed_num][embed_axis])
+                                             element = self.X[node_embed_num][embed_axis])
                 membership_array[embed_axis][node_embed_num][i] += membership
         return membership_array[embed_axis]
+    
+    
 
 
 
