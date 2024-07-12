@@ -1,9 +1,9 @@
 import torch
 import hparams
-
+import hparams
 class FuzzyLayer:
     """
-    This is the parent class which will contain variables for for Antecedant, Inference and Consequent classes.
+    This is the parent class which will contain variables for Antecedant, Inference and Consequent classes.
 
     Args:
         X: The dataset which contains all the embeddings. shape(no_of_nodes, node_embed_dim)
